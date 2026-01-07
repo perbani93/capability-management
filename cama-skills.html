@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Master - Unit Testing (JUnit)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f9fafb; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms; }
+
+        /* Readonly Input Styling */
+        .input-readonly {
+            border-color: transparent !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            cursor: default !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            resize: none;
+        }
+        
+        /* Select Readonly */
+        select.input-readonly { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        
+        /* Number Input */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        /* Tree Styling */
+        .tree-row:hover { background-color: #f3f4f6; }
+        .rotate-90 { transform: rotate(90deg); }
+        .transition-transform { transition: transform 0.2s; }
+
+        /* Vertical Text for Show Bar */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 0.25em;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-6 font-sans">
+
+    <div class="max-w-[1400px] mx-auto space-y-6">
+        
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex justify-between items-start">
+            <div class="flex items-start gap-4 flex-grow">
+                <div class="bg-indigo-600 p-3 rounded-lg text-white mt-1 shrink-0">
+                    <i class="fa fa-vial text-xl"></i>
+                </div>
+                
+                <div class="flex-grow w-full max-w-5xl pt-1">
+                    
+                    <nav class="flex items-center text-xs text-gray-500 mb-4 font-medium">
+                        <a href="#" target="_blank" class="text-gray-400 hover:text-gray-600 transition">Skill</a>
+                        <i class="fa fa-chevron-right text-[8px] text-gray-300 mx-2"></i>
+
+                        <a href="#" target="_blank" class="hover:text-indigo-600 hover:underline transition">Java Practical</a>
+                        <i class="fa fa-chevron-right text-[8px] text-gray-300 mx-2"></i>
+
+                        <a href="#" target="_blank" class="hover:text-indigo-600 hover:underline transition">Debugging & Optimization</a>
+                        <i class="fa fa-chevron-right text-[8px] text-gray-300 mx-2"></i>
+
+                        <span class="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">Unit Testing (JUnit)</span>
+                    </nav>
+
+                    <div class="mb-3">
+                        <input id="input-name" type="text" class="smart-input w-full text-xl font-bold text-gray-800 border-b border-transparent bg-transparent px-0 focus:outline-none input-readonly transition-all mb-2" value="Unit Testing (JUnit)" disabled>
+                        
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1 edit-only-element hidden">Description</label>
+                        <textarea id="input-desc" disabled 
+                            class="smart-input w-full text-xs text-gray-500 leading-relaxed border border-transparent rounded p-0 focus:ring-2 focus:ring-indigo-200 outline-none bg-transparent input-readonly overflow-hidden" 
+                            rows="1" 
+                            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'">Proficiency in writing repeatable tests using the JUnit framework to ensure code reliability. Includes test lifecycle management, assertions, and integration with build tools.</textarea>
+                    </div>
+
+                    <div class="border-t border-dashed border-gray-200 pt-3 mt-1 flex flex-wrap gap-x-8 gap-y-2 items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Code</span>
+                            <div class="relative group">
+                                <span class="absolute left-0 top-1.5 edit-only-element hidden text-gray-400 text-xs"><i class="fa fa-barcode"></i></span>
+                                <input id="input-code" type="text" class="smart-input w-48 text-xs font-mono font-bold text-gray-600 border border-transparent px-0 py-1 focus:outline-none bg-transparent input-readonly pl-0 transition-all" value="SKILL-2024-JUNIT-001" disabled>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Type</span>
+                            <select id="input-type" onchange="handleTypeChange()" disabled class="smart-input w-32 text-xs font-semibold text-gray-700 border border-transparent px-0 py-1 focus:outline-none bg-transparent input-readonly cursor-pointer">
+                                <option value="soft_skill">Soft Skill</option>
+                                <option value="hard_skill">Hard Skill</option>
+                                <option value="business_skill">Business Skill</option>
+                                <option value="technology" selected>Technology</option>
+                                <option value="tool_usage">Tool Usage</option>
+                                <option value="language_skill">Language Skill</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">Nature</span>
+                            <select id="input-nature" disabled class="smart-input w-32 text-xs font-semibold text-gray-700 border border-transparent px-0 py-1 focus:outline-none bg-transparent input-readonly cursor-pointer">
+                                <option value="practical" selected>Practical</option>
+                                <option value="conceptual">Conceptual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 shrink-0 ml-4">
+                <button onclick="toggleEditMode(true)" id="btn-start-edit" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm flex items-center gap-2">
+                    <i class="fa fa-pencil text-gray-500"></i> <span>Edit Mode</span>
+                </button>
+
+                <div id="group-action-buttons" class="hidden flex gap-2">
+                    <button onclick="toggleEditMode(false)" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm flex items-center gap-2">
+                        <i class="fa fa-times"></i> <span>Cancel</span>
+                    </button>
+                    <button onclick="saveData()" class="bg-green-600 border border-transparent hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm flex items-center gap-2">
+                        <i class="fa fa-check"></i> <span>Save Changes</span>
+                    </button>
+                </div>
+
+                <button id="btn-publish" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                    Publish
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6 items-start">
+            
+            <div id="left-column" class="col-span-12 lg:col-span-3 space-y-6 transition-all duration-300">
+                
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Related Categories</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="group flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+                            Java
+                            <i class="fa fa-times text-indigo-300 hover:text-indigo-600 cursor-pointer hidden edit-only-element"></i>
+                        </span>
+                        <span class="group flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+                            Testing
+                            <i class="fa fa-times text-indigo-300 hover:text-indigo-600 cursor-pointer hidden edit-only-element"></i>
+                        </span>
+                        <span class="group flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+                            Quality Assurance
+                            <i class="fa fa-times text-indigo-300 hover:text-indigo-600 cursor-pointer hidden edit-only-element"></i>
+                        </span>
+                        
+                        <button class="hidden edit-only-element px-3 py-1 border border-dashed border-gray-300 text-gray-400 text-xs font-bold rounded-full hover:bg-gray-50 hover:border-indigo-400 hover:text-indigo-600 transition items-center gap-1">
+                            <i class="fa fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <div id="card-related-tech" class="hidden bg-white p-5 rounded-xl border border-gray-200 shadow-sm transition-all duration-300">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Related Technologies</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="group flex items-center gap-2 px-3 py-1 bg-white border border-gray-200 text-gray-700 text-xs font-medium rounded shadow-sm">
+                            JUnit 5
+                            <i class="fa fa-times text-gray-300 hover:text-red-500 cursor-pointer hidden edit-only-element"></i>
+                        </span>
+
+                        <button class="hidden edit-only-element px-3 py-1 border border-dashed border-gray-300 text-gray-400 text-xs font-bold rounded hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition items-center gap-1">
+                            <i class="fa fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <div id="card-related-tools" class="hidden bg-white p-5 rounded-xl border border-gray-200 shadow-sm transition-all duration-300">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Related Tools</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="group flex items-center gap-2 px-3 py-1 bg-white border border-gray-200 text-gray-700 text-xs font-medium rounded shadow-sm">
+                            IntelliJ IDEA
+                            <i class="fa fa-times text-gray-300 hover:text-red-500 cursor-pointer hidden edit-only-element"></i>
+                        </span>
+
+                        <button class="hidden edit-only-element px-3 py-1 border border-dashed border-gray-300 text-gray-400 text-xs font-bold rounded hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition items-center gap-1">
+                            <i class="fa fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">OPM Levels</h3>
+                        
+                        <div class="flex items-center gap-1">
+                            <button class="w-6 h-6 shrink-0 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded flex items-center justify-center border border-indigo-100 hover:bg-indigo-100 transition cursor-default">2</button>
+                            <button class="w-6 h-6 shrink-0 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded flex items-center justify-center border border-indigo-100 hover:bg-indigo-100 transition cursor-default">3</button>
+                            <button class="w-6 h-6 shrink-0 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded flex items-center justify-center border border-indigo-100 hover:bg-indigo-100 transition cursor-default">4</button>
+                            
+                            <button class="edit-only-element hidden w-6 h-6 shrink-0 border border-dashed border-gray-300 text-gray-400 text-[10px] font-bold rounded flex items-center justify-center hover:border-indigo-400 hover:text-indigo-600 transition">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="relative bg-indigo-50/50 rounded-lg border-l-4 border-indigo-500 pl-3 p-3 shadow-sm">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-[10px] font-bold text-indigo-700 uppercase">Level 2 - Basic</h3>
+                                <button class="text-gray-300 hover:text-red-500 transition edit-only-element hidden text-xs">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <textarea disabled class="smart-input input-readonly w-full bg-transparent border-transparent text-xs text-gray-600 focus:outline-none resize-none overflow-hidden leading-relaxed p-0" rows="3" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'">Writes simple test cases for single methods. Understands basic assertions (assertEquals, assertTrue).</textarea>
+                        </div>
+
+                        <div class="relative bg-indigo-50/50 rounded-lg border-l-4 border-indigo-500 pl-3 p-3 shadow-sm">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-[10px] font-bold text-indigo-700 uppercase">Level 3 - Intermediate</h3>
+                                <button class="text-gray-300 hover:text-red-500 transition edit-only-element hidden text-xs">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <textarea disabled class="smart-input input-readonly w-full bg-transparent border-transparent text-xs text-gray-600 focus:outline-none resize-none overflow-hidden leading-relaxed p-0" rows="3" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'">Uses setup/teardown methods effectively. Mocks external dependencies. Covers edge cases and exception scenarios.</textarea>
+                        </div>
+
+                        <div class="relative bg-indigo-50/50 rounded-lg border-l-4 border-indigo-500 pl-3 p-3 shadow-sm">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-[10px] font-bold text-indigo-700 uppercase">Level 4 - Advanced</h3>
+                                <button class="text-gray-300 hover:text-red-500 transition edit-only-element hidden text-xs">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <textarea disabled class="smart-input input-readonly w-full bg-transparent border-transparent text-xs text-gray-600 focus:outline-none resize-none overflow-hidden leading-relaxed p-0" rows="3" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'">Designs test suites for complex systems. Implements parameterized tests and integrates testing into CI/CD pipelines.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="right-column" class="col-span-12 lg:col-span-9 transition-all duration-300">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden min-h-[600px] flex flex-col">
+                    <div class="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <h3 class="text-sm font-bold text-gray-800">Sub-skills Structure</h3>
+                            <div class="flex gap-2">
+                                <button onclick="expandAll()" class="text-[10px] bg-white border border-gray-300 px-2 py-1 rounded text-gray-600 hover:bg-gray-50">Expand All</button>
+                                <button onclick="collapseAll()" class="text-[10px] bg-white border border-gray-300 px-2 py-1 rounded text-gray-600 hover:bg-gray-50">Collapse All</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <button class="hidden edit-only-element bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded font-bold transition shadow-sm items-center gap-2">
+                                <i class="fa fa-plus"></i> New Sub-skill
+                            </button>
+                            <button onclick="toggleMatrix(false)" class="text-xs text-blue-600 font-bold hover:text-blue-800 flex items-center gap-1 border border-transparent hover:border-gray-200 px-2 py-1 rounded transition">
+                                Hide <i class="fa fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 bg-gray-100 text-[10px] font-bold text-gray-500 uppercase py-2 px-4 border-b border-gray-200 items-center">
+                        <div class="col-span-4">Sub Skill Name</div>
+                        <div class="col-span-2 text-center">Type</div>
+                        <div class="col-span-2 text-center">Nature</div>
+                        <div class="col-span-3 flex justify-center gap-1 text-indigo-600">
+                            <div class="w-10 text-center">Lvl 2</div>
+                            <div class="w-10 text-center">Lvl 3</div>
+                            <div class="w-10 text-center">Lvl 4</div>
+                        </div>
+                        <div class="col-span-1 text-center edit-only-element hidden">Action</div>
+                    </div>
+
+                    <div id="tree-container" class="flex-grow overflow-y-auto custom-scrollbar pb-10"></div>
+                </div>
+            </div>
+
+            <div id="show-bar" class="hidden col-span-1 flex flex-col items-center justify-center transition-all duration-300 lg:min-h-[600px]">
+                <button onclick="toggleMatrix(true)" class="bg-white hover:bg-gray-50 border border-gray-200 rounded-full py-8 px-2 shadow-sm text-blue-600 font-bold flex items-center justify-center h-full max-h-[600px] w-12 hover:shadow-md transition">
+                    <div class="vertical-text flex gap-4 items-center">
+                        <i class="fa fa-chevron-left text-sm mb-4"></i>
+                        SHOW MATRIX
+                    </div>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- TREE DATA & RENDER ---
+        const treeData = [
+            {
+                id: 1,
+                name: "Mocking (Mockito)",
+                type: "Hard Skill",
+                nature: "Practical",
+                weights: { level2: 1, level3: 5, level4: 8 },
+                expanded: true,
+                children: [
+                    {
+                        id: 11,
+                        name: "Behavior Stubbing",
+                        type: "Hard Skill",
+                        nature: "Practical",
+                        weights: { level2: 1, level3: 5, level4: 8 },
+                        expanded: true,
+                        children: [
+                             { id: 111, name: "Argument Matchers", type: "Hard Skill", nature: "Practical", weights: { level2: 1, level3: 6, level4: 9 }, children: [] },
+                             { id: 112, name: "Void Method Handling", type: "Hard Skill", nature: "Practical", weights: { level2: 1, level3: 5, level4: 8 }, children: [] }
+                        ]
+                    },
+                    {
+                        id: 12,
+                        name: "Verification",
+                        type: "Hard Skill",
+                        nature: "Conceptual",
+                        weights: { level2: 1, level3: 4, level4: 7 },
+                        children: []
+                    }
+                ]
+            },
+            // NEW PEER SKILL: Assertions (AssertJ)
+            {
+                id: 2,
+                name: "Assertions (AssertJ)",
+                type: "Hard Skill",
+                nature: "Practical",
+                weights: { level2: 1, level3: 5, level4: 9 },
+                expanded: true,
+                children: [
+                    {
+                        id: 21,
+                        name: "Fluent API",
+                        type: "Hard Skill",
+                        nature: "Practical",
+                        weights: { level2: 2, level3: 6, level4: 9 },
+                        expanded: true,
+                        children: [
+                            { id: 211, name: "Chained Assertions", type: "Hard Skill", nature: "Practical", weights: { level2: 1, level3: 7, level4: 10 }, children: [] },
+                            { id: 212, name: "Custom Conditions", type: "Hard Skill", nature: "Conceptual", weights: { level2: 1, level3: 5, level4: 8 }, children: [] }
+                        ]
+                    },
+                    {
+                        id: 22,
+                        name: "Exception Testing",
+                        type: "Hard Skill",
+                        nature: "Practical",
+                        weights: { level2: 1, level3: 5, level4: 8 },
+                        children: []
+                    }
+                ]
+            }
+        ];
+
+        let isEditMode = false;
+
+        function renderTree(nodes, container, level = 0) {
+            container.innerHTML = ''; 
+            nodes.forEach(node => {
+                const row = document.createElement('div');
+                row.className = 'tree-row grid grid-cols-12 items-center border-b border-gray-100 py-2 px-4 transition-colors text-sm';
+                
+                const hasChildren = node.children && node.children.length > 0;
+                const paddingLeft = level * 24; 
+                
+                const chevronHtml = hasChildren 
+                    ? `<i class="fa fa-chevron-right text-[10px] text-gray-400 mr-2 cursor-pointer transition-transform ${node.expanded ? 'rotate-90' : ''}" onclick="toggleNode(${node.id})"></i>`
+                    : `<span class="w-4 mr-2 inline-block"></span>`;
+
+                const iconHtml = `<i class="fa fa-circle text-[6px] text-indigo-400 mr-2"></i>`;
+
+                row.innerHTML = `
+                    <div class="col-span-4 flex items-center" style="padding-left: ${paddingLeft}px">
+                        ${chevronHtml}
+                        ${iconHtml}
+                        <a href="#" target="_blank" class="text-indigo-600 font-bold hover:underline hover:text-indigo-800 truncate transition-colors" title="${node.name}">${node.name}</a>
+                    </div>
+                    <div class="col-span-2 text-center">
+                        <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[10px] font-bold border border-gray-200">${node.type}</span>
+                    </div>
+                    <div class="col-span-2 text-center">
+                        <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border-blue-100 text-[10px] font-bold border">
+                            ${node.nature}
+                        </span>
+                    </div>
+                    
+                    <div class="col-span-3 flex justify-center gap-1 px-1">
+                        <input type="number" min="1" max="10" oninput="validateWeight(this)" value="${node.weights.level2}" 
+                            class="smart-input weight-input w-10 text-center text-[10px] font-bold text-gray-500 border rounded py-1 focus:ring-1 focus:ring-indigo-500 outline-none
+                            ${isEditMode ? 'bg-white border-gray-300' : 'bg-transparent border-transparent cursor-default'}" 
+                            ${isEditMode ? '' : 'disabled'}>
+                            
+                        <input type="number" min="1" max="10" oninput="validateWeight(this)" value="${node.weights.level3}" 
+                            class="smart-input weight-input w-10 text-center text-[10px] font-bold text-gray-500 border rounded py-1 focus:ring-1 focus:ring-indigo-500 outline-none
+                            ${isEditMode ? 'bg-white border-gray-300' : 'bg-transparent border-transparent cursor-default'}" 
+                            ${isEditMode ? '' : 'disabled'}>
+                            
+                        <input type="number" min="1" max="10" oninput="validateWeight(this)" value="${node.weights.level4}" 
+                            class="smart-input weight-input w-10 text-center text-[10px] font-bold text-gray-500 border rounded py-1 focus:ring-1 focus:ring-indigo-500 outline-none
+                            ${isEditMode ? 'bg-white border-gray-300' : 'bg-transparent border-transparent cursor-default'}" 
+                            ${isEditMode ? '' : 'disabled'}>
+                    </div>
+
+                    <div class="col-span-1 flex justify-end gap-2 edit-only-element ${isEditMode ? 'flex' : 'hidden'}">
+                        <button class="text-gray-400 hover:text-indigo-600" title="Add Child"><i class="fa fa-plus-circle"></i></button>
+                        <button class="text-gray-400 hover:text-red-600" title="Delete"><i class="fa fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(row);
+
+                if (hasChildren && node.expanded) {
+                    const childrenContainer = document.createElement('div');
+                    renderTree(node.children, childrenContainer, level + 1);
+                    container.appendChild(childrenContainer);
+                }
+            });
+        }
+
+        function validateWeight(input) {
+            if (input.value === '') return; 
+            let val = parseInt(input.value);
+            if (val > 10) input.value = 10;
+            if (val < 1) input.value = 1;
+        }
+
+        function toggleNode(id) {
+            function findAndToggle(nodes) {
+                for (let node of nodes) {
+                    if (node.id === id) {
+                        node.expanded = !node.expanded;
+                        return true;
+                    }
+                    if (node.children && findAndToggle(node.children)) return true;
+                }
+                return false;
+            }
+            findAndToggle(treeData);
+            refreshTree();
+        }
+
+        function expandAll() {
+            function expand(nodes) {
+                nodes.forEach(node => { node.expanded = true; if(node.children) expand(node.children); });
+            }
+            expand(treeData);
+            refreshTree();
+        }
+
+        function collapseAll() {
+            function collapse(nodes) {
+                nodes.forEach(node => { node.expanded = false; if(node.children) collapse(node.children); });
+            }
+            collapse(treeData);
+            refreshTree();
+        }
+
+        function refreshTree() {
+            const container = document.getElementById('tree-container');
+            renderTree(treeData, container);
+        }
+
+        // --- EDIT MODE LOGIC ---
+        function toggleEditMode(enable) {
+            isEditMode = enable;
+            
+            const btnStart = document.getElementById('btn-start-edit');
+            const groupAction = document.getElementById('group-action-buttons');
+            const btnPublish = document.getElementById('btn-publish');
+
+            if (enable) {
+                btnStart.classList.add('hidden');
+                btnPublish.classList.add('hidden');
+                groupAction.classList.remove('hidden');
+            } else {
+                btnStart.classList.remove('hidden');
+                btnPublish.classList.remove('hidden');
+                groupAction.classList.add('hidden');
+            }
+
+            const inputs = document.querySelectorAll('.smart-input');
+            inputs.forEach(input => {
+                if (enable) {
+                    input.disabled = false;
+                    input.classList.remove('input-readonly', 'bg-transparent', 'border-transparent', 'px-0');
+                    input.classList.add('bg-white', 'border-gray-300', 'px-2', 'rounded', 'focus:ring-2', 'focus:ring-indigo-500');
+                    
+                    if(input.id === 'input-name') {
+                         input.classList.add('border-b-2', 'border-indigo-500'); 
+                         input.classList.remove('border-gray-300', 'rounded');
+                    }
+                    if(input.id === 'input-code') {
+                         input.classList.add('pl-6'); 
+                    }
+                    if(input.classList.contains('weight-input')) {
+                        input.classList.remove('px-2'); 
+                        input.classList.add('px-0');
+                    }
+                } else {
+                    input.disabled = true;
+                    input.classList.add('input-readonly', 'bg-transparent', 'border-transparent', 'px-0');
+                    input.classList.remove('bg-white', 'border-gray-300', 'px-2', 'rounded', 'focus:ring-2', 'focus:ring-indigo-500', 'pl-6');
+                    
+                    if(input.id === 'input-name') {
+                         input.classList.remove('border-b-2', 'border-indigo-500');
+                    }
+                }
+            });
+
+            const editElements = document.querySelectorAll('.edit-only-element');
+            editElements.forEach(el => {
+                if (enable) {
+                    el.classList.remove('hidden');
+                    if (el.tagName === 'BUTTON' || el.classList.contains('col-span-1') || el.classList.contains('flex')) el.classList.add('flex');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                }
+            });
+
+            refreshTree(); 
+        }
+
+        function saveData() {
+            toggleEditMode(false);
+            console.log("Saved");
+        }
+
+        // --- TYPE CHANGE LOGIC ---
+        function handleTypeChange() {
+            const type = document.getElementById('input-type').value;
+            const techCard = document.getElementById('card-related-tech');
+            const toolsCard = document.getElementById('card-related-tools');
+
+            techCard.classList.add('hidden');
+            toolsCard.classList.add('hidden');
+
+            if (type === 'technology') {
+                techCard.classList.remove('hidden');
+            } else if (type === 'tool_usage') {
+                toolsCard.classList.remove('hidden');
+            }
+        }
+
+        // --- TOGGLE MATRIX LOGIC (SHOW/HIDE) ---
+        function toggleMatrix(show) {
+            const leftCol = document.getElementById('left-column');
+            const rightCol = document.getElementById('right-column');
+            const showBar = document.getElementById('show-bar');
+
+            if (show) {
+                rightCol.classList.remove('hidden');
+                showBar.classList.add('hidden');
+                
+                leftCol.classList.remove('lg:col-span-11');
+                leftCol.classList.add('lg:col-span-3');
+            } else {
+                rightCol.classList.add('hidden');
+                showBar.classList.remove('hidden');
+                
+                leftCol.classList.remove('lg:col-span-3');
+                leftCol.classList.add('lg:col-span-11');
+            }
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshTree();
+            handleTypeChange();
+            
+            // Trigger auto-height on load
+            const descInput = document.getElementById('input-desc');
+            descInput.style.height = '';
+            descInput.style.height = descInput.scrollHeight + 'px';
+        });
+
+    </script>
+</body>
+</html>

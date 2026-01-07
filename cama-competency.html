@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competency - Java Springboot Programming</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* SCROLLBAR CUSTOMIZATION */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f9fafb; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        
+        /* TRANSITIONS */
+        .grid-transition { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* VERTICAL TEXT FOR COLLAPSED MATRIX */
+        .vertical-text { 
+            writing-mode: vertical-rl; 
+            text-orientation: upright; 
+            letter-spacing: 0.1em; 
+        }
+        
+        /* READONLY INPUT STYLES */
+        .input-readonly {
+            border-color: transparent !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            cursor: default !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* HIDE NUMBER SPINNERS */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+    </style>
+</head>
+<body class="bg-gray-50 p-6 font-sans">
+
+    <div class="max-w-[1600px] mx-auto">
+        
+        <div class="mb-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex gap-6 items-start">
+            
+            <div class="w-16 h-16 bg-purple-600 rounded-lg flex items-center justify-center text-white text-2xl flex-shrink-0 shadow-md">
+                <i class="fa fa-flask"></i>
+            </div>
+
+            <div class="flex-grow space-y-3 pt-1">
+                
+                <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Competency
+                </div>
+
+                <div class="relative">
+                    <h1 id="display-title" class="view-element text-2xl font-bold text-gray-900 leading-tight">
+                        Java Springboot Programming
+                    </h1>
+                    <input id="input-title" type="text" class="edit-element hidden w-full text-2xl font-bold text-gray-900 border-b-2 border-blue-500 focus:outline-none bg-blue-50/20 px-2 py-1" value="Java Springboot Programmer">
+                </div>
+
+                <div class="relative">
+                    <label class="edit-element hidden text-[10px] uppercase font-bold text-gray-400 mb-1">Description</label>
+
+                    <p id="display-desc" class="view-element text-sm text-gray-500 leading-relaxed max-w-4xl">
+                        Expertise in designing and building microservices and enterprise-grade applications using the Java language and Spring Boot framework. Covers dependency injection, RESTful APIs, and database integration.
+                    </p>
+                    
+                    <textarea id="input-desc" class="edit-element hidden w-full text-sm text-gray-700 border border-gray-300 rounded p-3 focus:ring-2 focus:ring-blue-200 outline-none resize-none bg-blue-50/20 auto-resize" rows="2">Expertise in designing and building microservices and enterprise-grade applications using the Java language and Spring Boot framework. Covers dependency injection, RESTful APIs, and database integration.</textarea>
+                </div>
+
+                <div class="border-b border-dashed border-gray-200 w-full pt-2"></div>
+
+                <div class="flex flex-wrap items-center gap-8 pt-1">
+                    
+                    <div class="flex items-center gap-3">
+                        <span class="bg-gray-100 border border-gray-200 text-gray-500 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                            CODE
+                        </span>
+                        <span id="display-code" class="view-element text-sm font-bold text-gray-700 font-mono tracking-tight">
+                            COMP-2024-JAVASB-001
+                        </span>
+                        <input id="input-code" type="text" class="edit-element hidden text-sm font-bold text-gray-700 font-mono border-b border-blue-500 focus:outline-none bg-transparent w-48" value="COMP-2024-JAVASB-001">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flex-shrink-0 pt-1">
+                
+                <div id="btn-group-view" class="flex gap-2">
+                    <button onclick="startEditMode()" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm flex items-center gap-2">
+                        <i class="fa fa-pencil text-gray-500"></i> <span>Edit Mode</span>
+                    </button>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-bold transition shadow-md shadow-blue-200">
+                        Publish
+                    </button>
+                </div>
+                
+                <div id="btn-group-edit" class="hidden flex gap-2">
+                    <button onclick="cancelEditMode()" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-600 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm flex items-center gap-2">
+                        <i class="fa fa-times"></i> <span>Cancel</span>
+                    </button>
+                    <button onclick="saveEditMode()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm flex items-center gap-2">
+                        <i class="fa fa-check"></i> <span>Save Changes</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="grid grid-cols-12 gap-6">
+            
+            <div id="left-panel" class="col-span-3 space-y-6 grid-transition">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm transition-colors duration-300">
+                    <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4 flex justify-between">
+                        Skills Mapping <span class="text-blue-600">3 Skills</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold rounded-full flex items-center gap-2">
+                            <a href="#" target="_blank" class="hover:text-blue-600 hover:underline transition-colors">Java Springboot - Practical</a>
+                            <i class="fa fa-times text-red-400 cursor-pointer hover:text-red-600 hidden edit-only-element"></i>
+                        </span>
+                        <span class="px-3 py-1 bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold rounded-full flex items-center gap-2">
+                            <a href="#" target="_blank" class="hover:text-blue-600 hover:underline transition-colors">Java - Conceptual</a>
+                            <i class="fa fa-times text-red-400 cursor-pointer hover:text-red-600 hidden edit-only-element"></i>
+                        </span>
+                        <span class="px-3 py-1 bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold rounded-full flex items-center gap-2">
+                            <a href="#" target="_blank" class="hover:text-blue-600 hover:underline transition-colors">Springboot - Conceptual</a>
+                            <i class="fa fa-times text-red-400 cursor-pointer hover:text-red-600 hidden edit-only-element"></i>
+                        </span>
+                        <button class="hidden edit-only-element px-3 py-1 border border-dashed border-blue-400 text-blue-600 text-xs font-bold rounded-full hover:bg-blue-50 transition">
+                            + Add Skill
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Levels</h3>
+                        <div class="flex gap-1 items-center">
+                            <button class="w-6 h-6 rounded bg-blue-600 text-white text-[10px] font-bold">3</button>
+                            <button class="w-6 h-6 rounded bg-blue-600 text-white text-[10px] font-bold">4</button>
+                            <button class="w-6 h-6 rounded bg-blue-600 text-white text-[10px] font-bold">5</button>
+                            <button class="hidden edit-only-element w-6 h-6 rounded border border-dashed border-blue-400 text-blue-600 text-[10px] font-bold hover:bg-blue-50 transition items-center justify-center">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                        
+                        <div class="relative group p-4 bg-gray-50 border-l-4 border-blue-400 rounded-r-lg">
+                            <button class="absolute top-2 right-2 text-red-300 hover:text-red-600 hidden edit-only-element transition" title="Remove Level">
+                                <i class="fa fa-trash text-xs"></i>
+                            </button>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">SFIA Level 3 - Apply</span>
+                            </div>
+                            <textarea rows="1" readonly class="auto-resize smart-input w-full text-xs p-0 bg-transparent border-transparent rounded-lg focus:ring-0 outline-none resize-none overflow-hidden transition-all duration-300 input-readonly" 
+                            >Develops components using Java standard libraries. Writes unit tests and fixes bugs in existing modules. Implements basic error handling and logging.</textarea>
+                        </div>
+
+                        <div class="relative group p-4 bg-gray-50 border-l-4 border-blue-500 rounded-r-lg">
+                            <button class="absolute top-2 right-2 text-red-300 hover:text-red-600 hidden edit-only-element transition" title="Remove Level">
+                                <i class="fa fa-trash text-xs"></i>
+                            </button>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-bold text-blue-700 uppercase tracking-tighter">SFIA Level 4 - Enable</span>
+                            </div>
+                            <textarea rows="1" readonly class="auto-resize smart-input w-full text-xs p-0 bg-transparent border-transparent rounded-lg focus:ring-0 outline-none resize-none overflow-hidden transition-all duration-300 input-readonly" 
+                            >Designs API interfaces and database schemas. Performs code reviews and optimizes JVM performance. Implements complex design patterns and security standards.</textarea>
+                        </div>
+
+                        <div class="relative group p-4 bg-gray-50 border-l-4 border-blue-600 rounded-r-lg">
+                            <button class="absolute top-2 right-2 text-red-300 hover:text-red-600 hidden edit-only-element transition" title="Remove Level">
+                                <i class="fa fa-trash text-xs"></i>
+                            </button>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-bold text-blue-800 uppercase tracking-tighter">SFIA Level 5 - Ensure</span>
+                            </div>
+                            <textarea rows="1" readonly class="auto-resize smart-input w-full text-xs p-0 bg-transparent border-transparent rounded-lg focus:ring-0 outline-none resize-none overflow-hidden transition-all duration-300 input-readonly" 
+                            >Defines application architecture and coding standards. Selects appropriate libraries and frameworks for enterprise solutions. Mentors team on best practices.</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="right-panel" class="col-span-9 grid-transition">
+                <div id="matrix-expanded" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden h-full flex flex-col">
+                    <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Competency Matrix</h3>
+                        <button onclick="toggleMatrix()" class="text-gray-400 hover:text-blue-600 transition flex items-center gap-1 group">
+                            <span class="text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">Hide</span>
+                            <i class="fa fa-chevron-right border border-gray-300 rounded p-1 hover:bg-white hover:shadow-sm"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto flex-grow custom-scrollbar">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 bg-white z-10 shadow-sm">
+                                <tr class="border-b">
+                                    <th class="p-3 border-r font-bold bg-white w-1 whitespace-nowrap text-xs text-gray-500 uppercase">Skill</th>
+                                    
+                                    <th class="p-3 text-center bg-blue-50/30 border-r border-gray-100 min-w-[140px]">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-bold text-gray-800">SFIA Level 3</span>
+                                            <span class="text-[10px] text-blue-600 font-bold uppercase tracking-widest mt-0.5">Apply</span>
+                                        </div>
+                                    </th>
+                                    
+                                    <th class="p-3 text-center bg-blue-50/50 border-r border-blue-100 min-w-[140px]">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-bold text-gray-800">SFIA Level 4</span>
+                                            <span class="text-[10px] text-blue-700 font-bold uppercase tracking-widest mt-0.5">Enable</span>
+                                        </div>
+                                    </th>
+                                    
+                                    <th class="p-3 text-center bg-blue-50/30 min-w-[140px]">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-bold text-gray-800">SFIA Level 5</span>
+                                            <span class="text-[10px] text-blue-800 font-bold uppercase tracking-widest mt-0.5">Ensure</span>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50/50 transition">
+                                    <td class="px-3 py-3 border-r bg-gray-50/30 align-top whitespace-nowrap">
+                                        <a href="#" target="_blank" class="block text-xs font-bold text-gray-700 mt-1 mb-2 hover:text-blue-600 hover:underline transition-colors">Java Springboot - Practical</a>
+                                        <div class="flex flex-col gap-1.5 items-start">
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-200 text-gray-600 border border-gray-300">Technology</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-50 text-green-600 border border-green-200">Practical</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 border-r align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 appearance-none input-readonly transition-all duration-300">
+                                                <option>1 - Awareness</option>
+                                                <option>2 - Basic</option>
+                                                <option selected>3 - Intermediate</option>
+                                                <option>4 - Advanced</option>
+                                                <option>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="75" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-gray-400 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 border-r bg-blue-50/20 align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 font-bold text-blue-700 appearance-none input-readonly transition-all duration-300">
+                                                <option>1 - Awareness</option>
+                                                <option>2 - Basic</option>
+                                                <option>3 - Intermediate</option>
+                                                <option selected>4 - Advanced</option>
+                                                <option>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-blue-600 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="85" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none font-bold text-blue-700 input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-blue-600 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 appearance-none input-readonly transition-all duration-300">
+                                                <option>1 - Awareness</option>
+                                                <option>2 - Basic</option>
+                                                <option>3 - Intermediate</option>
+                                                <option>4 - Advanced</option>
+                                                <option selected>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="90" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-gray-400 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr class="border-b hover:bg-gray-50/50 transition">
+                                    <td class="px-3 py-3 border-r bg-gray-50/30 align-top whitespace-nowrap">
+                                        <a href="#" target="_blank" class="block text-xs font-bold text-gray-700 mt-1 mb-2 hover:text-blue-600 hover:underline transition-colors">Java - Conceptual</a>
+                                        <div class="flex flex-col gap-1.5 items-start">
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-200 text-gray-600 border border-gray-300">Technology</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">Conceptual</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 border-r align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 appearance-none input-readonly transition-all duration-300">
+                                                <option>1 - Awareness</option>
+                                                <option>2 - Basic</option>
+                                                <option selected>3 - Intermediate</option>
+                                                <option>4 - Advanced</option>
+                                                <option>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="70" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-gray-400 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 border-r bg-blue-50/20 align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 font-bold text-blue-700 appearance-none input-readonly transition-all duration-300">
+                                                <option>1 - Awareness</option>
+                                                <option>2 - Basic</option>
+                                                <option>3 - Intermediate</option>
+                                                <option selected>4 - Advanced</option>
+                                                <option>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-blue-600 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="80" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none font-bold text-blue-700 input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-blue-600 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 appearance-none input-readonly transition-all duration-300">
+                                                <option>1 - Awareness</option>
+                                                <option>2 - Basic</option>
+                                                <option>3 - Intermediate</option>
+                                                <option>4 - Advanced</option>
+                                                <option selected>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="85" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-gray-400 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="border-b hover:bg-gray-50/50 transition">
+                                    <td class="px-3 py-3 border-r bg-gray-50/30 align-top whitespace-nowrap">
+                                        <a href="#" target="_blank" class="block text-xs font-bold text-gray-700 mt-1 mb-2 hover:text-blue-600 hover:underline transition-colors">Springboot - Conceptual</a>
+                                        <div class="flex flex-col gap-1.5 items-start">
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-200 text-gray-600 border border-gray-300">Technology</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">Conceptual</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 border-r align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 appearance-none input-readonly transition-all duration-300">
+                                                <option selected>3 - Intermediate</option>
+                                                <option>4 - Advanced</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="70" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-gray-400 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 border-r bg-blue-50/20 align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 font-bold text-blue-700 appearance-none input-readonly transition-all duration-300">
+                                                <option selected>4 - Advanced</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-blue-600 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="80" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none font-bold text-blue-700 input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-blue-600 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-2 py-3 align-top">
+                                        <div class="space-y-3">
+                                            <select disabled class="smart-input w-full text-xs border border-transparent bg-transparent rounded py-2 px-2 appearance-none input-readonly transition-all duration-300">
+                                                <option selected>5 - Expert</option>
+                                            </select>
+                                            <div class="flex items-center gap-2 justify-between px-1">
+                                                <span class="text-[9px] font-bold text-gray-400 uppercase">Threshold</span>
+                                                <div class="flex items-center">
+                                                    <input type="number" value="85" disabled class="smart-input w-12 text-xs py-1 border-b border-transparent bg-transparent text-center outline-none input-readonly transition-all duration-300">
+                                                    <span class="text-xs font-bold text-gray-400 ml-1">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="matrix-collapsed" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm h-full flex flex-col items-center justify-center p-2 cursor-pointer hover:bg-blue-50 transition" onclick="toggleMatrix()">
+                    <div class="flex flex-col items-center gap-4 text-blue-600">
+                        <i class="fa fa-chevron-left text-xl"></i>
+                        <div class="flex flex-col items-center gap-8">
+                             <span class="text-xs font-bold uppercase vertical-text">SHOW</span>
+                             <span class="text-xs font-bold uppercase vertical-text">MATRIX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC AUTO RESIZE TEXTAREA ---
+        function adjustHeight(el) {
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight) + 'px';
+        }
+
+        function triggerResizeAll() {
+            const textareas = document.querySelectorAll('.auto-resize');
+            textareas.forEach(el => adjustHeight(el));
+        }
+
+        function initAutoResize() {
+            const textareas = document.querySelectorAll('.auto-resize');
+            textareas.forEach(el => {
+                el.addEventListener('input', () => adjustHeight(el));
+            });
+            triggerResizeAll();
+        }
+
+        window.addEventListener('resize', () => {
+             triggerResizeAll();
+        });
+
+        document.addEventListener('DOMContentLoaded', initAutoResize);
+
+
+        // --- LOGIC MODES ---
+        function startEditMode() {
+            setEditState(true);
+            
+            // Sync Input Values from Display
+            const displayTitle = document.getElementById('display-title').innerText.trim();
+            const displayDesc = document.getElementById('display-desc').innerText.trim();
+            const displayCode = document.getElementById('display-code').innerText.trim();
+
+            document.getElementById('input-title').value = displayTitle;
+            document.getElementById('input-desc').value = displayDesc;
+            document.getElementById('input-code').value = displayCode;
+            
+            triggerResizeAll();
+            setTimeout(triggerResizeAll, 50); 
+            setTimeout(triggerResizeAll, 300);
+        }
+
+        function cancelEditMode() {
+            setEditState(false);
+            triggerResizeAll();
+            setTimeout(triggerResizeAll, 50);
+            setTimeout(triggerResizeAll, 300);
+        }
+
+        function saveEditMode() {
+            const newTitle = document.getElementById('input-title').value;
+            const newDesc = document.getElementById('input-desc').value;
+            const newCode = document.getElementById('input-code').value;
+            
+            // Update Display
+            document.getElementById('display-title').innerText = newTitle;
+            document.getElementById('display-desc').innerText = newDesc; 
+            document.getElementById('display-code').innerText = newCode;
+
+            setEditState(false);
+            
+            triggerResizeAll();
+            setTimeout(triggerResizeAll, 50);
+            setTimeout(triggerResizeAll, 300);
+            
+            console.log("Saved.");
+        }
+
+        function setEditState(isEdit) {
+            const btnGroupView = document.getElementById('btn-group-view');
+            const btnGroupEdit = document.getElementById('btn-group-edit');
+            
+            // Toggle Buttons
+            if (isEdit) {
+                btnGroupView.classList.add('hidden');
+                btnGroupEdit.classList.remove('hidden');
+            } else {
+                btnGroupView.classList.remove('hidden');
+                btnGroupEdit.classList.add('hidden');
+            }
+
+            // Toggle Header Elements (Title, Desc, Code)
+            const viewElements = document.querySelectorAll('.view-element');
+            const editElements = document.querySelectorAll('.edit-element');
+
+            viewElements.forEach(el => {
+                if(isEdit) el.classList.add('hidden');
+                else el.classList.remove('hidden');
+            });
+
+            editElements.forEach(el => {
+                if(isEdit) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+
+            // Toggle Other Edit-Only Elements (Trash icons, Add buttons)
+            const editOnlyElements = document.querySelectorAll('.edit-only-element');
+            editOnlyElements.forEach(el => {
+                // Skip inputs in header because they are handled above by .edit-element
+                if(el.classList.contains('edit-element')) return; 
+
+                if(isEdit) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            // Toggle Smart Inputs (Matrix table)
+            const smartInputs = document.querySelectorAll('.smart-input');
+            smartInputs.forEach(input => {
+                // Header inputs are handled separately
+                if(input.id === 'input-desc' || input.id === 'input-title' || input.id === 'input-code') return; 
+
+                if (isEdit) {
+                    input.disabled = false;
+                    input.readOnly = false;
+                    input.classList.remove('input-readonly', 'bg-transparent', 'border-transparent', 'appearance-none', 'p-0');
+                    input.classList.add('bg-white', 'border-gray-300', 'px-2', 'focus:ring-2', 'focus:ring-blue-500');
+                    
+                    if(input.tagName === 'TEXTAREA') input.classList.add('p-3');
+
+                } else {
+                    input.disabled = true;
+                    if(input.tagName === 'TEXTAREA') input.readOnly = true;
+                    
+                    input.classList.add('input-readonly', 'bg-transparent', 'border-transparent', 'appearance-none', 'p-0');
+                    input.classList.remove('bg-white', 'border-gray-300', 'px-2', 'focus:ring-2', 'focus:ring-blue-500', 'p-3');
+                }
+            });
+        }
+
+        function toggleMatrix() {
+            const leftPanel = document.getElementById('left-panel');
+            const rightPanel = document.getElementById('right-panel');
+            const expandedView = document.getElementById('matrix-expanded');
+            const collapsedView = document.getElementById('matrix-collapsed');
+
+            if (!expandedView.classList.contains('hidden')) {
+                // HIDE MATRIX
+                expandedView.classList.add('hidden');
+                collapsedView.classList.remove('hidden');
+                leftPanel.classList.remove('col-span-3');
+                leftPanel.classList.add('col-span-11');
+                rightPanel.classList.remove('col-span-9');
+                rightPanel.classList.add('col-span-1');
+            } else {
+                // SHOW MATRIX
+                collapsedView.classList.add('hidden');
+                expandedView.classList.remove('hidden');
+                leftPanel.classList.remove('col-span-11');
+                leftPanel.classList.add('col-span-3');
+                rightPanel.classList.remove('col-span-1');
+                rightPanel.classList.add('col-span-9');
+            }
+
+            triggerResizeAll();
+            setTimeout(triggerResizeAll, 300);
+            setTimeout(triggerResizeAll, 550);
+        }
+    </script>
+</body>
+</html>
